@@ -1,9 +1,15 @@
 import { Router } from "express";
 import PostsController from "../../controllers/posts/posts.controller";
 import { uploadSingleImage } from "../../middleware/post.middleware";
+import { authenticate } from "../../middleware/auth.middleware";
 
 const router = Router();
 
-router.post("/", uploadSingleImage, PostsController.createPost);
+// CREATE
+router.post("/", authenticate, uploadSingleImage, PostsController.createPost);
+
+// READ ALL GUEST
+router.get("/", PostsController.getPosts);
+router.get("/:id", PostsController.getPostById);
 
 export default router;

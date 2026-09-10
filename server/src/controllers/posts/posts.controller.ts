@@ -1,11 +1,15 @@
 import { Request, Response } from "express";
-import { createPostSchema } from "../../validations/post.validation";
+import {
+  createPostSchema,
+  postIdSchema,
+} from "../../validations/post.validation";
 import { db } from "../../config/db";
 import { postsTable } from "../../config/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq, and } from "drizzle-orm";
 import { uploadToCloudinary } from "../../services/cloudinary.service";
 
 export class PostsController {
+  // CREATE
   createPost = async (req: Request, res: Response) => {
     try {
       // 1. validation
@@ -38,6 +42,69 @@ export class PostsController {
       });
     } catch (error) {
       console.error("Create post error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Terjadi kesalahan pada server",
+        error: error instanceof Error ? error.message : error,
+      });
+    }
+  };
+
+  // READ
+  // ALL
+  getPosts = async (req: Request, res: Response) => {
+    try {
+      const posts = await db
+        .select()
+        .from(postsTable)
+        .where(eq(postsTable.status, "published"))
+        .orderBy(desc(postsTable.createdAt));
+
+      return res.status(200).json({
+        success: true,
+        message: "Get Posts Successfully",
+        data: {
+          posts: posts,
+        },
+      });
+    } catch (error: any) {
+      console.error("Read post error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Terjadi kesalahan pada server",
+        error: error instanceof Error ? error.message : error,
+      });
+    }
+  };
+
+  // READ
+  // BY ID
+  getPostById = async (req: Request, res: Response) => {
+    try {
+      const validateParams = postIdSchema.parse(req.params);
+      const { id } = validateParams;
+
+      const [post] = await db
+        .select()
+        .from(postsTable)
+        .where(and(eq(postsTable.id, id), eq(postsTable.status, "published")));
+
+      if (!post) {
+        return res.status(404).json({
+          success: false,
+          message: "No posts found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Retrieving post succesfully",
+        data: {
+          post: post,
+        },
+      });
+    } catch (error: any) {
+      console.error("Read post error:", error);
       return res.status(500).json({
         success: false,
         message: "Terjadi kesalahan pada server",
