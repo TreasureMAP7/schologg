@@ -20,3 +20,21 @@ export const uploadToCloudinary = (
     uploadStream.end(fileBuffer);
   });
 };
+
+export const deleteFromCloudinary = (publicId: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(
+      publicId,
+      {
+        resource_type: "image",
+      },
+      (error) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve();
+      },
+    );
+  });
+};

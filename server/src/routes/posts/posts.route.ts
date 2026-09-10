@@ -12,4 +12,19 @@ router.post("/", authenticate, uploadSingleImage, PostsController.createPost);
 router.get("/", PostsController.getPosts);
 router.get("/:id", PostsController.getPostById);
 
+// UPDATE
+router.patch(
+  "/:id",
+  authenticate,
+  uploadSingleImage,
+  PostsController.updatePost,
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  uploadSingleImage,
+  PostsController.deletePost,
+);
+
 export default router;
