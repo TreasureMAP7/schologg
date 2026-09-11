@@ -8,7 +8,7 @@ const app = express();
 const PORT = 5000;
 
 app.get("/", (req, res) => {
-  res.send("Hai dari port 5000");
+  res.send("Hai dari pordsdst 5000");
 });
 
 app.get("/api/v1/auth", (req, res) => {

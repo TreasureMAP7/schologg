@@ -7,11 +7,12 @@ import {
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
 import { postsTable } from "../../config/schema";
-import { desc, eq, and } from "drizzle-orm";
+import { desc, eq, and, like, or } from "drizzle-orm";
 import {
   deleteFromCloudinary,
   uploadToCloudinary,
 } from "../../services/cloudinary.service";
+import { createGzip } from "zlib";
 
 export class PostsController {
   // CREATE
@@ -59,10 +60,29 @@ export class PostsController {
   // ALL
   getPosts = async (req: Request, res: Response) => {
     try {
+      const { categoryId, searchQuery } = req.query;
+
+      let condition = eq(postsTable.status, "published");
+
+      if (categoryId) {
+        condition = and(
+          eq(postsTable.status, "published"),
+          eq(postsTable.categoryId, Number(categoryId)),
+        )!;
+      } else if (searchQuery) {
+        condition = and(
+          eq(postsTable.status, "published"),
+          or(
+            like(postsTable.title, `%${searchQuery}%`),
+            like(postsTable.content, `%${searchQuery}%`),
+          ),
+        )!;
+      }
+
       const posts = await db
         .select()
         .from(postsTable)
-        .where(eq(postsTable.status, "published"))
+        .where(condition)
         .orderBy(desc(postsTable.createdAt));
 
       return res.status(200).json({
