@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import authRouter from "./routes/auth/auth.route";
 import postRouter from "./routes/posts/posts.route";
@@ -11,6 +12,7 @@ app.get("/", (req, res) => {
   res.send("Server connected");
 });
 
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.use("/api/v1/auth", authRouter);
