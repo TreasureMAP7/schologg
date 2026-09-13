@@ -4,6 +4,9 @@ import UsersController from "../../controllers/users/users.controller";
 
 const router = Router();
 
+// Get users data
+router.get("/data", UsersController.getUsers);
+
 // Get All Data by User Id For User
 router.get("/:userId", authenticate, UsersController.getPostsByUserId);
 

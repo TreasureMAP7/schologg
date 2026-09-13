@@ -4,10 +4,35 @@ import {
   userPostParamsSchema,
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
-import { postsTable } from "../../config/schema";
+import { postsTable, usersTable } from "../../config/schema";
 import { and, desc, eq } from "drizzle-orm";
 
 export class UsersController {
+  // Get user data
+  getUsers = async (req: Request, res: Response) => {
+    try {
+      const users = await db
+        .select()
+        .from(usersTable)
+        .orderBy(desc(usersTable.createdAt));
+
+      return res.status(200).json({
+        success: true,
+        message: "Get Users Successfully",
+        data: {
+          users: users,
+        },
+      });
+    } catch (error) {
+      console.error("Read user error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Terjadi kesalahan pada server",
+        error: error instanceof Error ? error.message : error,
+      });
+    }
+  };
+  
   // All Data
   getPostsByUserId = async (req: Request, res: Response) => {
     try {
