@@ -57,6 +57,32 @@ export class PostsController {
   };
 
   // READ
+  // CATEGORIES
+  getCategories = async (req: Request, res: Response) => {
+    try {
+      const categories = await db
+        .select()
+        .from(categoriesTable)
+        .orderBy(desc(categoriesTable.createdAt));
+
+      return res.status(200).json({
+        success: true,
+        message: "Get Users Successfully",
+        data: {
+          users: categories,
+        },
+      });
+    } catch (error) {
+      console.error("Read user error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Terjadi kesalahan pada server",
+        error: error instanceof Error ? error.message : error,
+      });
+    }
+  };
+
+  // READ
   // ALL
   getPosts = async (req: Request, res: Response) => {
     try {
