@@ -176,7 +176,7 @@ class _LoginFormState extends State<LoginForm> {
 
                   token = await storage.read(key: 'jwt_token') ?? '';
 
-                  Navigator.pushReplacementNamed(context, "/home");
+                  Navigator.pushReplacementNamed(context, "/main");
                 }
 
                 ScaffoldMessenger.of(context).showSnackBar(
