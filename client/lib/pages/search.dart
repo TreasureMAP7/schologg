@@ -84,7 +84,11 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           ListTile(
                             onTap: () {
-                              print(post["id"]);
+                              Navigator.pushNamed(
+                                context,
+                                '/detail',
+                                arguments: {'post': post, "isEditable": false},
+                              );
                             },
                             contentPadding: EdgeInsets.all(12.0),
                             trailing: ClipRRect(

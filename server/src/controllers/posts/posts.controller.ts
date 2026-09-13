@@ -67,9 +67,9 @@ export class PostsController {
 
       return res.status(200).json({
         success: true,
-        message: "Get Users Successfully",
+        message: "Get Categories Successfully",
         data: {
-          users: categories,
+          categories: categories,
         },
       });
     } catch (error) {

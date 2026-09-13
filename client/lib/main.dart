@@ -1,3 +1,4 @@
+import 'package:client/pages/detail.dart';
 import 'package:client/pages/home.dart';
 import 'package:client/pages/login.dart';
 import 'package:client/pages/main_page.dart';
@@ -24,6 +25,7 @@ class _MyAppState extends State<MyApp> {
         "/login": (context) => LoginPage(),
         "/main": (context) => MainPage(),
         "/home": (context) => HomePage(),
+        "/detail": (context) => DetailPage(),
       },
       initialRoute: "/register",
     );

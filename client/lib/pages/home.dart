@@ -58,7 +58,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               ListTile(
                 onTap: () {
-                  print(post["id"]);
+                  Navigator.pushNamed(
+                    context,
+                    '/detail',
+                    arguments: {'post': post, "isEditable": false},
+                  );
                 },
                 contentPadding: EdgeInsets.all(12.0),
                 trailing: ClipRRect(
@@ -87,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      '${post["user"]["username"]} - ${post["category"]["title"]}',
+                      '@${post["user"]["username"]} - ${post["category"]["title"]}',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
