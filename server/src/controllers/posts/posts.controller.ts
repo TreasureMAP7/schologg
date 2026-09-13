@@ -6,7 +6,7 @@ import {
   updatePostSchema,
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
-import { postsTable } from "../../config/schema";
+import { categoriesTable, postsTable, usersTable } from "../../config/schema";
 import { desc, eq, and, like, or } from "drizzle-orm";
 import {
   deleteFromCloudinary,
@@ -80,8 +80,32 @@ export class PostsController {
       }
 
       const posts = await db
-        .select()
+        .select({
+          id: postsTable.id,
+          title: postsTable.title,
+          content: postsTable.content,
+          imageUrl: postsTable.imageUrl,
+          imagePublicId: postsTable.imagePublicId,
+          status: postsTable.status,
+          createdAt: postsTable.createdAt,
+          updatedAt: postsTable.updatedAt,
+
+          user: {
+            id: usersTable.id,
+            username: usersTable.username,
+          },
+
+          category: {
+            id: categoriesTable.id,
+            title: categoriesTable.title,
+          },
+        })
         .from(postsTable)
+        .leftJoin(usersTable, eq(postsTable.userId, usersTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(condition)
         .orderBy(desc(postsTable.createdAt));
 
@@ -110,8 +134,32 @@ export class PostsController {
       const { id } = validateParams;
 
       const [post] = await db
-        .select()
+        .select({
+          id: postsTable.id,
+          title: postsTable.title,
+          content: postsTable.content,
+          imageUrl: postsTable.imageUrl,
+          imagePublicId: postsTable.imagePublicId,
+          status: postsTable.status,
+          createdAt: postsTable.createdAt,
+          updatedAt: postsTable.updatedAt,
+
+          user: {
+            id: usersTable.id,
+            username: usersTable.username,
+          },
+
+          category: {
+            id: categoriesTable.id,
+            title: categoriesTable.title,
+          },
+        })
         .from(postsTable)
+        .leftJoin(usersTable, eq(postsTable.userId, usersTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(and(eq(postsTable.id, id), eq(postsTable.status, "published")));
 
       if (!post) {

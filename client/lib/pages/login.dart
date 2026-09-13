@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -72,6 +73,9 @@ class _LoginFormState extends State<LoginForm> {
   final passwordController = TextEditingController();
   bool togglePass = false;
 
+  final storage = FlutterSecureStorage();
+  String token = '';
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -136,8 +140,6 @@ class _LoginFormState extends State<LoginForm> {
             ),
             onPressed: () async {
               if (formKey.currentState!.validate()) {
-                print("Hai");
-
                 final response = await http.post(
                   Uri.parse('http://localhost:5000/api/v1/auth/login'),
                   headers: {'Content-type': 'application/json'},
@@ -149,14 +151,36 @@ class _LoginFormState extends State<LoginForm> {
 
                 final body = jsonDecode(response.body);
 
-                if (!mounted) return;
+                if (body["success"] == true) {
+                  if (!mounted) return;
+
+                  await storage.write(
+                    key: 'jwt_token',
+                    value: body['data']['token'],
+                  );
+
+                  await storage.write(
+                    key: 'user_id',
+                    value: body['data']['user']['id'].toString(),
+                  );
+
+                  await storage.write(
+                    key: 'username',
+                    value: body['data']['user']['username'],
+                  );
+
+                  await storage.write(
+                    key: 'email',
+                    value: body['data']['user']['email'],
+                  );
+
+                  token = await storage.read(key: 'jwt_token') ?? '';
+
+                  Navigator.pushReplacementNamed(context, "/main");
+                }
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      body["success"] ? "Login Berhasil" : "Login gagal",
-                    ),
-                  ),
+                  SnackBar(content: Text(token.isEmpty ? "Username atau password salah" : token)),
                 );
               }
             },
