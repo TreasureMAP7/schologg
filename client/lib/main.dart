@@ -1,3 +1,5 @@
+import 'package:client/pages/login.dart';
+import 'package:client/pages/register.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +17,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Text("Hello World"),
+      routes: {
+        "/register": (context) => RegisterPage(),
+        "/login": (context) => LoginPage(),
+      },
+      initialRoute: "/register",
     );
   }
 }
