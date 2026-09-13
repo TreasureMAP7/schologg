@@ -180,7 +180,7 @@ class _LoginFormState extends State<LoginForm> {
                 }
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(token.isEmpty ? "Username atau password salah" : token)),
+                  SnackBar(content: Text(token.isEmpty ? "Username atau password salah" : "Selamat datang")),
                 );
               }
             },

@@ -4,7 +4,7 @@ import {
   userPostParamsSchema,
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
-import { postsTable, usersTable } from "../../config/schema";
+import { categoriesTable, postsTable, usersTable } from "../../config/schema";
 import { and, desc, eq } from "drizzle-orm";
 
 export class UsersController {
@@ -32,7 +32,7 @@ export class UsersController {
       });
     }
   };
-  
+
   // All Data
   getPostsByUserId = async (req: Request, res: Response) => {
     try {
@@ -40,8 +40,32 @@ export class UsersController {
       const { userId } = validateParams;
 
       const posts = await db
-        .select()
+        .select({
+          id: postsTable.id,
+          title: postsTable.title,
+          content: postsTable.content,
+          imageUrl: postsTable.imageUrl,
+          imagePublicId: postsTable.imagePublicId,
+          status: postsTable.status,
+          createdAt: postsTable.createdAt,
+          updatedAt: postsTable.updatedAt,
+
+          user: {
+            id: usersTable.id,
+            username: usersTable.username,
+          },
+
+          category: {
+            id: categoriesTable.id,
+            title: categoriesTable.title,
+          },
+        })
         .from(postsTable)
+        .leftJoin(usersTable, eq(postsTable.userId, usersTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(
           and(
             eq(postsTable.userId, userId),

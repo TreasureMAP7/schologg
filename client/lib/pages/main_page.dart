@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:client/pages/category.dart';
 import 'package:client/pages/home.dart';
+import 'package:client/pages/profile.dart';
 import 'package:client/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -18,12 +19,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late int currentPageIndex = 0;
 
-  late List pages = [
-    HomePage(),
-    SearchPage(),
-    CategoryPage(),
-    const Center(child: Text("Profile")),
-  ];
+  late List pages = [HomePage(), SearchPage(), CategoryPage(), ProfilePage()];
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +62,10 @@ class _MainPageState extends State<MainPage> {
             label: "Profile",
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.mode_edit_outline),
       ),
     );
   }

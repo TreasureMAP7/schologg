@@ -13,8 +13,10 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   final storage = FlutterSecureStorage();
-  final queryController = TextEditingController();
+  String? category;
   String username = '';
+  List<dynamic> data = [];
+  List<String> categories = [];
   List<dynamic> posts = [];
 
   Future<void> getStorage() async {
@@ -25,10 +27,28 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
+  Future<void> getCategories() async {
+    final response = await http.get(
+      Uri.parse('http://localhost:5000/api/v1/posts/categories'),
+    );
+
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+
+      setState(() {
+        data = body["data"]["categories"];
+        categories = data.reversed
+            .map((category) => category["title"].toString())
+            .toList();
+        print(categories);
+      });
+    }
+  }
+
   Future<void> getPosts() async {
     final response = await http.get(
       Uri.parse(
-        'http://localhost:5000/api/v1/posts?searchQuery=${queryController.text}',
+        'http://localhost:5000/api/v1/posts?categoryId=${categories.indexOf(category!) + 1}',
       ),
     );
 
@@ -45,7 +65,7 @@ class _CategoryPageState extends State<CategoryPage> {
   void initState() {
     super.initState();
     getStorage();
-    getPosts();
+    getCategories();
   }
 
   @override
@@ -54,27 +74,27 @@ class _CategoryPageState extends State<CategoryPage> {
       padding: const EdgeInsets.all(12.0),
       child: Column(
         children: [
-          TextFormField(
-            controller: queryController,
-            decoration: InputDecoration(
-              labelText: "Search",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              suffixIcon: IconButton(
-                onPressed: () {
+          SizedBox(
+            width: double.infinity,
+            child: DropdownButton(
+              hint: Text("Choose category"),
+              value: category,
+              isExpanded: true,
+              items: categories.map((val) {
+                return DropdownMenuItem(value: val, child: Text(val));
+              }).toList(),
+              onChanged: (value) {
+                setState(() => category = value!);
+                setState(() {
                   getPosts();
-                },
-                icon: Icon(Icons.search),
-              ),
-              suffixIconColor: Colors.deepPurple[300],
+                });
+              },
             ),
-            keyboardType: TextInputType.text,
           ),
           SizedBox(height: 24),
           Expanded(
             child: posts.isEmpty
-                ? Text("No posts found")
+                ? Text("Select a category")
                 : ListView.builder(
                     itemCount: posts.length,
                     itemBuilder: (context, index) {
