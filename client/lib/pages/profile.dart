@@ -108,7 +108,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           ListTile(
                             onTap: () {
-                              print(post["id"]);
+                              Navigator.pushNamed(
+                                context,
+                                '/detail',
+                                arguments: {'post': post, 'isEditable': true},
+                              );
+                              ;
                             },
                             contentPadding: EdgeInsets.all(12.0),
                             trailing: ClipRRect(

@@ -104,7 +104,11 @@ class _CategoryPageState extends State<CategoryPage> {
                         children: [
                           ListTile(
                             onTap: () {
-                              print(post["id"]);
+                              Navigator.pushNamed(
+                                context,
+                                '/detail',
+                                arguments: {'post': post, "isEditable": false},
+                              );
                             },
                             contentPadding: EdgeInsets.all(12.0),
                             trailing: ClipRRect(
