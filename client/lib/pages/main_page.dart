@@ -59,7 +59,9 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/create');
+        },
         child: Icon(Icons.mode_edit_outline),
       ),
     );

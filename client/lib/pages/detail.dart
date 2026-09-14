@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
@@ -8,6 +10,30 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  final storage = FlutterSecureStorage();
+
+  Future<void> deletePost(int postId) async {
+    final token = await storage.read(key: "jwt_token");
+
+    final response = await http.delete(
+      Uri.parse("http://localhost:5000/api/v1/posts/$postId"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Post deleted succesfully')));
+      Navigator.pushNamedAndRemoveUntil(context, "/main", (route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Post deletion failed: Error ${response.statusCode}'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -32,12 +58,18 @@ class _DetailPageState extends State<DetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                post["imageUrl"],
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
+              post["imageUrl"] != null
+                  ? Image.network(
+                      post["imageUrl"],
+                      width: double.infinity,
+                      height: 150,
+                      fit: BoxFit.contain,
+                    )
+                  : const SizedBox(
+                      width: double.infinity,
+                      height: 150,
+                      child: Icon(Icons.image_not_supported_outlined),
+                    ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Column(
@@ -97,7 +129,13 @@ class _DetailPageState extends State<DetailPage> {
                                     backgroundColor: Colors.deepPurple[300],
                                     minimumSize: Size(2000, 50),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/edit',
+                                      arguments: {'post': post},
+                                    );
+                                  },
                                   child: Text(
                                     "Edit Post",
                                     style: TextStyle(
@@ -112,7 +150,9 @@ class _DetailPageState extends State<DetailPage> {
                                     backgroundColor: Colors.red[300],
                                     minimumSize: Size(2000, 50),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    deletePost(post["id"]);
+                                  },
                                   child: Text(
                                     "Delete Post",
                                     style: TextStyle(

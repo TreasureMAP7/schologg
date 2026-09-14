@@ -1,4 +1,6 @@
+import 'package:client/pages/create.dart';
 import 'package:client/pages/detail.dart';
+import 'package:client/pages/edit.dart';
 import 'package:client/pages/home.dart';
 import 'package:client/pages/login.dart';
 import 'package:client/pages/main_page.dart';
@@ -26,6 +28,8 @@ class _MyAppState extends State<MyApp> {
         "/main": (context) => MainPage(),
         "/home": (context) => HomePage(),
         "/detail": (context) => DetailPage(),
+        "/create": (context) => CreatePostPage(),
+        "/edit": (context) => EditPostPage(),
       },
       initialRoute: "/register",
     );

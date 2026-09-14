@@ -7,23 +7,25 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CreatePostPage extends StatefulWidget {
-  const CreatePostPage({super.key});
+class EditPostPage extends StatefulWidget {
+  const EditPostPage({super.key});
 
   @override
-  State<CreatePostPage> createState() => _CreatePostPageState();
+  State<EditPostPage> createState() => _EditPostPageState();
 }
 
-class _CreatePostPageState extends State<CreatePostPage> {
+class _EditPostPageState extends State<EditPostPage> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 
   final storage = FlutterSecureStorage();
   String? category;
+  int? postId;
   List<dynamic> data = [];
   List<String> categories = [];
 
   final ImagePicker picker = ImagePicker();
+  String? oldImageUrl;
 
   XFile? selectedImage;
   Uint8List? imageBytes;
@@ -45,13 +47,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
     }
   }
 
-  Future<void> createPost() async {
+  Future<void> editPost(int? postId) async {
     final token = await storage.read(key: "jwt_token");
     final userId = await storage.read(key: "user_id");
 
     final request = http.MultipartRequest(
-      "POST",
-      Uri.parse("http://localhost:5000/api/v1/posts"),
+      "PATCH",
+      Uri.parse("http://localhost:5000/api/v1/posts/${postId}"),
     );
 
     request.headers.addAll({"Authorization": "Bearer $token"});
@@ -77,12 +79,12 @@ class _CreatePostPageState extends State<CreatePostPage> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Post created succesfully')));
+      ).showSnackBar(SnackBar(content: Text('Post update succesfully')));
       Navigator.pushNamedAndRemoveUntil(context, "/main", (route) => false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Post creation failed: Error ${response.statusCode}'),
+          content: Text('Post update failed: Error ${response.statusCode}'),
         ),
       );
     }
@@ -107,6 +109,27 @@ class _CreatePostPageState extends State<CreatePostPage> {
   void initState() {
     super.initState();
     getCategories();
+  }
+
+  bool init = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
+
+    final post = args["post"];
+
+    if (!init) {
+      titleController.text = post["title"];
+      contentController.text = post["content"];
+      category = post["category"]["title"];
+      oldImageUrl = post["imageUrl"];
+      postId = post["id"];
+      init = true;
+    }
   }
 
   @override
@@ -171,21 +194,28 @@ class _CreatePostPageState extends State<CreatePostPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: imageBytes == null
-                    ? Container(
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.add_photo_alternate_outlined,
-                            size: 45,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      )
+                    ? oldImageUrl == null
+                          ? Container(
+                              width: double.infinity,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.add_photo_alternate_outlined,
+                                  size: 45,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )
+                          : Image.network(
+                              oldImageUrl!,
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            )
                     : Image.memory(
                         imageBytes!,
                         width: double.infinity,
@@ -197,14 +227,14 @@ class _CreatePostPageState extends State<CreatePostPage> {
             SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                createPost();
+                editPost(postId);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple[300],
                 minimumSize: Size(2000, 50),
               ),
               child: Text(
-                "Create Post",
+                "Save Post",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
