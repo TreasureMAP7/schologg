@@ -113,12 +113,20 @@ class _CategoryPageState extends State<CategoryPage> {
                             contentPadding: EdgeInsets.all(12.0),
                             trailing: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                post["imageUrl"],
-                                width: 90,
-                                height: 90,
-                                fit: BoxFit.cover,
-                              ),
+                              child: post["imageUrl"] != null
+                                  ? Image.network(
+                                      post["imageUrl"],
+                                      width: 90,
+                                      height: 90,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : const SizedBox(
+                                      width: 90,
+                                      height: 90,
+                                      child: Icon(
+                                        Icons.image_not_supported_outlined,
+                                      ),
+                                    ),
                             ),
                             title: Text(
                               post["title"],
