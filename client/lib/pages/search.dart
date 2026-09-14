@@ -56,6 +56,10 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           TextField(
             controller: queryController,
+            textInputAction: TextInputAction.search,
+            onSubmitted: (value) {
+              getPosts();
+            },
             decoration: InputDecoration(
               labelText: "Search",
               border: OutlineInputBorder(
@@ -98,7 +102,7 @@ class _SearchPageState extends State<SearchPage> {
                                       post["imageUrl"],
                                       width: 90,
                                       height: 90,
-                                      fit: BoxFit.contain,
+                                      fit: BoxFit.cover,
                                     )
                                   : const SizedBox(
                                       width: 90,

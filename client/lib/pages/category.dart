@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -40,20 +41,26 @@ class _CategoryPageState extends State<CategoryPage> {
         categories = data.reversed
             .map((category) => category["title"].toString())
             .toList();
-        print(categories);
+        getPosts();
       });
     }
   }
 
   Future<void> getPosts() async {
+    print(categories);
+    print(category);
+
     final response = await http.get(
-      Uri.parse(
-        'http://localhost:5000/api/v1/posts?categoryId=${categories.indexOf(category!) + 1}',
-      ),
+      category == null
+          ? Uri.parse('http://localhost:5000/api/v1/posts')
+          : Uri.parse(
+              'http://localhost:5000/api/v1/posts?categoryId=${categories.indexOf(category!) + 1}',
+            ),
     );
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
+      print(category);
 
       setState(() {
         posts = body["data"]["posts"];
@@ -94,7 +101,7 @@ class _CategoryPageState extends State<CategoryPage> {
           SizedBox(height: 24),
           Expanded(
             child: posts.isEmpty
-                ? Text("Select a category")
+                ? Text("No posts found")
                 : ListView.builder(
                     itemCount: posts.length,
                     itemBuilder: (context, index) {
@@ -118,7 +125,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                       post["imageUrl"],
                                       width: 90,
                                       height: 90,
-                                      fit: BoxFit.contain,
+                                      fit: BoxFit.cover,
                                     )
                                   : const SizedBox(
                                       width: 90,
