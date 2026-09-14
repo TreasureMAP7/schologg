@@ -65,7 +65,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool togglePass = false;
+  bool togglePass = true;
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +167,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(body['message'])));
+                Navigator.pushReplacementNamed(context, '/login');
               }
             },
 

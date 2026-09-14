@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       post["imageUrl"],
                                       width: 90,
                                       height: 90,
-                                      fit: BoxFit.contain,
+                                      fit: BoxFit.cover,
                                     )
                                   : const SizedBox(
                                       width: 90,

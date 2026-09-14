@@ -63,7 +63,7 @@ class _DetailPageState extends State<DetailPage> {
                       post["imageUrl"],
                       width: double.infinity,
                       height: 150,
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
                     )
                   : const SizedBox(
                       width: double.infinity,

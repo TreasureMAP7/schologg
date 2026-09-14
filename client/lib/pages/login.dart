@@ -71,7 +71,7 @@ class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool togglePass = false;
+  bool togglePass = true;
 
   final storage = FlutterSecureStorage();
   String token = '';
