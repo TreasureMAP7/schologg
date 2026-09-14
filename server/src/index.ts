@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import authRouter from "./routes/auth/auth.route";
 import postRouter from "./routes/posts/posts.route";
@@ -8,9 +9,10 @@ const app = express();
 const PORT = 5000;
 
 app.get("/", (req, res) => {
-  res.send("Server connected");
+  res.send("Server Cdsadaonnected");
 });
 
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.use("/api/v1/auth", authRouter);

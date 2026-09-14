@@ -6,7 +6,7 @@ import {
   updatePostSchema,
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
-import { postsTable } from "../../config/schema";
+import { categoriesTable, postsTable, usersTable } from "../../config/schema";
 import { desc, eq, and, like, or } from "drizzle-orm";
 import {
   deleteFromCloudinary,
@@ -57,6 +57,32 @@ export class PostsController {
   };
 
   // READ
+  // CATEGORIES
+  getCategories = async (req: Request, res: Response) => {
+    try {
+      const categories = await db
+        .select()
+        .from(categoriesTable)
+        .orderBy(desc(categoriesTable.createdAt));
+
+      return res.status(200).json({
+        success: true,
+        message: "Get Categories Successfully",
+        data: {
+          categories: categories,
+        },
+      });
+    } catch (error) {
+      console.error("Read user error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Terjadi kesalahan pada server",
+        error: error instanceof Error ? error.message : error,
+      });
+    }
+  };
+
+  // READ
   // ALL
   getPosts = async (req: Request, res: Response) => {
     try {
@@ -80,8 +106,32 @@ export class PostsController {
       }
 
       const posts = await db
-        .select()
+        .select({
+          id: postsTable.id,
+          title: postsTable.title,
+          content: postsTable.content,
+          imageUrl: postsTable.imageUrl,
+          imagePublicId: postsTable.imagePublicId,
+          status: postsTable.status,
+          createdAt: postsTable.createdAt,
+          updatedAt: postsTable.updatedAt,
+
+          user: {
+            id: usersTable.id,
+            username: usersTable.username,
+          },
+
+          category: {
+            id: categoriesTable.id,
+            title: categoriesTable.title,
+          },
+        })
         .from(postsTable)
+        .leftJoin(usersTable, eq(postsTable.userId, usersTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(condition)
         .orderBy(desc(postsTable.createdAt));
 
@@ -110,8 +160,32 @@ export class PostsController {
       const { id } = validateParams;
 
       const [post] = await db
-        .select()
+        .select({
+          id: postsTable.id,
+          title: postsTable.title,
+          content: postsTable.content,
+          imageUrl: postsTable.imageUrl,
+          imagePublicId: postsTable.imagePublicId,
+          status: postsTable.status,
+          createdAt: postsTable.createdAt,
+          updatedAt: postsTable.updatedAt,
+
+          user: {
+            id: usersTable.id,
+            username: usersTable.username,
+          },
+
+          category: {
+            id: categoriesTable.id,
+            title: categoriesTable.title,
+          },
+        })
         .from(postsTable)
+        .leftJoin(usersTable, eq(postsTable.userId, usersTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(and(eq(postsTable.id, id), eq(postsTable.status, "published")));
 
       if (!post) {

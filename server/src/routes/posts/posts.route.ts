@@ -9,6 +9,7 @@ const router = Router();
 router.post("/", authenticate, uploadSingleImage, PostsController.createPost);
 
 // READ ALL GUEST
+router.get("/categories", PostsController.getCategories);
 router.get("/", PostsController.getPosts);
 router.get("/:id", PostsController.getPostById);
 
