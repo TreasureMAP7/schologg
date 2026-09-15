@@ -32,6 +32,8 @@ class _MyAppState extends State<MyApp> {
         "/edit": (context) => EditPostPage(),
       },
       initialRoute: "/register",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: "Inter"),
     );
   }
 }

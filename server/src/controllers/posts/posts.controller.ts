@@ -7,7 +7,7 @@ import {
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
 import { categoriesTable, postsTable, usersTable } from "../../config/schema";
-import { desc, eq, and, like, or } from "drizzle-orm";
+import { desc, eq, and, like, or, asc } from "drizzle-orm";
 import {
   deleteFromCloudinary,
   uploadToCloudinary,
@@ -63,7 +63,7 @@ export class PostsController {
       const categories = await db
         .select()
         .from(categoriesTable)
-        .orderBy(desc(categoriesTable.createdAt));
+        .orderBy(asc(categoriesTable.id));
 
       return res.status(200).json({
         success: true,

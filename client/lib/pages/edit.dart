@@ -40,10 +40,11 @@ class _EditPostPageState extends State<EditPostPage> {
 
       setState(() {
         data = body["data"]["categories"];
-        categories = data.reversed
+        categories = data
             .map((category) => category["title"].toString())
             .toList();
       });
+      print(category);
     }
   }
 
@@ -136,7 +137,7 @@ class _EditPostPageState extends State<EditPostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Post'),
+        title: const Text('Edit Post'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -38,7 +37,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
       setState(() {
         data = body["data"]["categories"];
-        categories = data.reversed
+        categories = data
             .map((category) => category["title"].toString())
             .toList();
         getPosts();
@@ -47,7 +46,6 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Future<void> getPosts() async {
-    print(categories);
     print(category);
 
     final response = await http.get(

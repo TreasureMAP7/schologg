@@ -111,38 +111,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// ListTile(
-//               contentPadding: EdgeInsets.all(12.0),
-//               leading: ClipRRect(
-//                 borderRadius: BorderRadius.circular(10),
-//                 child: Image.network(
-//                   'https://images.unsplash.com/photo-1559827260-dc66d52bef19',
-//                   width: 90,
-//                   height: 90,
-//                   fit: BoxFit.cover,
-//                 ),
-//               ),
-//               title: Text(
-//                 username,
-//                 maxLines: 2,
-//                 overflow: TextOverflow.ellipsis,
-//                 style: TextStyle(fontWeight: FontWeight.bold),
-//               ),
-//               subtitle: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   SizedBox(height: 6),
-//                   Text(
-//                     'Sungguh indah memang orca itu dan mereka sangat menarik untuk dibahas...',
-//                     maxLines: 2,
-//                     overflow: TextOverflow.ellipsis,
-//                   ),
-//                   SizedBox(height: 8),
-//                   Text(
-//                     '@miftahakhdani • Animal',
-//                     style: TextStyle(fontSize: 12),
-//                   ),
-//                 ],
-//               ),
-//             ),
