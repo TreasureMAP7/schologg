@@ -58,7 +58,6 @@ class _CategoryPageState extends State<CategoryPage> {
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
-      print(category);
 
       setState(() {
         posts = body["data"]["posts"];

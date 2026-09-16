@@ -159,7 +159,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 }).toList(),
                 onChanged: (value) {
                   setState(() => category = value!);
-                  print(category);
                 },
               ),
             ),
