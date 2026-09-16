@@ -33,7 +33,19 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
-  # fonts:
+  fonts:
+      - family: inter
+        fonts: 
+        - asset: assets/fonts/Inter_28pt-Regular.ttf
+        - asset: assets/fonts/Inter_28pt-Medium.ttf
+        - asset: assets/fonts/Inter_28pt-Light.ttf
+        - asset: assets/fonts/Inter_28pt-SemiBold.ttf
+        - asset: assets/fonts/Inter_28pt-Bold.ttf
+        - asset: assets/fonts/Inter_28pt-Thin.ttf
+        - asset: assets/fonts/Inter_28pt-Black.ttf
+        - asset: assets/fonts/Inter_28pt-ExtraLight.ttf
+        - asset: assets/fonts/Inter_28pt-ExtraBold.ttf
+        
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

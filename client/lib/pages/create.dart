@@ -38,7 +38,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
       setState(() {
         data = body["data"]["categories"];
-        categories = data.reversed
+        categories = data
             .map((category) => category["title"].toString())
             .toList();
       });
@@ -159,7 +159,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 }).toList(),
                 onChanged: (value) {
                   setState(() => category = value!);
-                  print(category);
                 },
               ),
             ),

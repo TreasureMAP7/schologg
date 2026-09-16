@@ -22,7 +22,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final valueUser = await storage.read(key: "username");
 
     setState(() {
-      print(valueId);
       username = valueUser ?? "Guest";
       userId = valueId ?? "dnasdnans";
     });
@@ -43,7 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
       setState(() {
         posts = body["data"]["posts"];
-        print(posts);
       });
     }
   }

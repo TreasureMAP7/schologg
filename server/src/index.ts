@@ -9,7 +9,7 @@ const app = express();
 const PORT = 5000;
 
 app.get("/", (req, res) => {
-  res.send("Server Cdsadaonnected");
+  res.send("Server Connected");
 });
 
 app.use(cors({ origin: "*" }));
